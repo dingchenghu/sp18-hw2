@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 public class GlobeSortClient {
 
@@ -39,13 +41,28 @@ public class GlobeSortClient {
     }
 
     public void run(Integer[] values) throws Exception {
+
+        // measure the latency
         System.out.println("Pinging " + serverStr + "...");
+
+        long start = System.currentTimeMillis();
         serverStub.ping(Empty.newBuilder().build());
+        long end = System.currentTimeMillis();
+
+        NumberFormat formatter = new DecimalFormat("#0.00000");
+        System.out.println("Ping() Execution time is " + formatter.format((end - start) / 1000d) + " seconds");
+
         System.out.println("Ping successful.");
 
         System.out.println("Requesting server to sort array");
         IntArray request = IntArray.newBuilder().addAllValues(Arrays.asList(values)).build();
+
+        start = System.currentTimeMillis();
         IntArray response = serverStub.sortIntegers(request);
+        end = System.currentTimeMillis();
+
+        System.out.println("Client RPC Execution time is " + formatter.format((end - start) / 1000d) + " seconds");
+
         System.out.println("Sorted array");
     }
 
