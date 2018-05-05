@@ -63,6 +63,9 @@ public class GlobeSortClient {
 
         System.out.println("Client RPC Execution time is " + formatter.format((end - start) / 1000d) + " seconds");
 
+        
+        System.out.println("One-way network time is " + formatter.format((((end - start)-response.getSorttime())/2) / 1000d) + " seconds");
+
         System.out.println("Sorted array");
     }
 
